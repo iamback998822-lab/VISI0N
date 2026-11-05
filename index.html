@@ -252,6 +252,45 @@ main, .nav, .footer { position: relative; z-index: 1; }
   border-radius: 999px;
 }
 
+/* seasonal greeting — sits above the eyebrow, same shape as the pills */
+.diwali {
+  display: flex;
+  width: fit-content;
+  align-items: center;
+  gap: 9px;
+  margin: 0 0 14px;
+  padding: 7px 15px 7px 12px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text);
+  background: linear-gradient(100deg, rgba(255, 62, 165, 0.12), rgba(139, 92, 246, 0.14));
+  border: 1px solid rgba(255, 62, 165, 0.3);
+  border-radius: 999px;
+  box-shadow: 0 0 26px rgba(255, 62, 165, 0.1);
+}
+.diwali__lamp {
+  font-size: 0.95rem;
+  line-height: 1;
+  filter: drop-shadow(0 0 6px rgba(255, 176, 64, 0.65));
+  animation: diwali-glow 3.4s ease-in-out infinite;
+}
+@keyframes diwali-glow {
+  0%, 100% { filter: drop-shadow(0 0 5px rgba(255, 176, 64, 0.5)); }
+  50% { filter: drop-shadow(0 0 11px rgba(255, 176, 64, 0.85)); }
+}
+.diwali__from {
+  padding-left: 9px;
+  font-size: 0.62rem;
+  letter-spacing: 0.1em;
+  color: var(--muted);
+  border-left: 1px solid var(--line);
+}
+@media (prefers-reduced-motion: reduce) {
+  .diwali__lamp { animation: none; }
+}
+
 .dot {
   width: 7px; height: 7px;
   border-radius: 50%;
@@ -1033,43 +1072,291 @@ main, .nav, .footer { position: relative; z-index: 1; }
 }
 .vault__bar[hidden] { display: none; }
 
-.vault__filters {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
+.vault__tabs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  width: 100%;
 }
-.vault__filter {
-  padding: 8px 14px;
+.vault__tab {
+  --tab: var(--violet);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 18px;
+  font: inherit;
+  color: var(--text);
+  text-align: left;
+  cursor: pointer;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+.vault__tab[data-filter="wallpaper"] { --tab: var(--cyan); }
+.vault__tab[data-filter="live"] { --tab: var(--cyan); }
+.vault__tab[data-filter="pfp"] { --tab: var(--pink); }
+.vault__tab[data-filter="mod"] { --tab: var(--violet); }
+.vault__tab[data-filter="private"] {
+  --tab: var(--pink);
+  grid-column: 1 / -1;
+}
+.vault__tab:hover {
+  transform: translateY(-2px);
+  border-color: var(--tab);
+}
+.vault__tab.is-active {
+  border-color: var(--tab);
+  background:
+    linear-gradient(140deg, rgba(255, 255, 255, 0.05), transparent 70%),
+    var(--card);
+  box-shadow: inset 0 0 0 1px var(--tab);
+}
+.vault__tab:focus-visible {
+  outline: 2px solid var(--tab);
+  outline-offset: 3px;
+}
+.vault__tab-icon {
+  font-size: 1.35rem;
+  line-height: 1;
+}
+.vault__tab-text {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+.vault__tab-label {
+  font-size: 0.98rem;
+  font-weight: 650;
+  letter-spacing: -0.01em;
+}
+.vault__tab-meta {
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+.vault__tab-count {
+  flex: none;
+  margin-left: auto;
+  padding: 4px 10px;
   font-family: var(--mono);
   font-size: 0.7rem;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  color: var(--muted);
-  background: transparent;
+  color: var(--tab);
+  background: rgba(255, 255, 255, 0.04);
   border: 1px solid var(--line);
   border-radius: 999px;
-  cursor: pointer;
-  transition: color 0.2s, border-color 0.2s, background 0.2s;
 }
-.vault__filter:hover {
-  color: var(--text);
-  border-color: rgba(255, 255, 255, 0.2);
-}
-.vault__filter.is-active {
-  color: var(--cyan);
-  background: rgba(53, 240, 224, 0.08);
-  border-color: rgba(53, 240, 224, 0.35);
+
+@media (max-width: 780px) {
+  .vault__tabs { grid-template-columns: 1fr; }
 }
 .vault__count {
+  margin-left: auto;
   font-family: var(--mono);
   font-size: 0.72rem;
   color: var(--muted);
+}
+
+.vault__hide {
+  padding: 7px 13px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.vault__hide:hover {
+  color: var(--cyan);
+  border-color: rgba(53, 240, 224, 0.45);
+}
+.vault__hide[hidden] { display: none; }
+
+/* ---------- private vault lock ---------- */
+.vault__lock { margin-bottom: 18px; }
+.vault__lock[hidden] { display: none; }
+
+.lock {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: min(460px, 100%);
+  margin: 0 auto;
+  padding: 32px 26px 28px;
+  text-align: center;
+  background:
+    radial-gradient(120% 130% at 50% 0%, rgba(255, 62, 165, 0.1), transparent 65%),
+    var(--card);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+.lock__icon {
+  font-size: 1.9rem;
+  line-height: 1;
+}
+.lock__title {
+  margin: 0;
+  font-size: 1.15rem;
+  letter-spacing: -0.01em;
+}
+.lock__text {
+  max-width: 34ch;
+  margin: 0 0 2px;
+  font-size: 0.88rem;
+  color: var(--muted);
+}
+.lock__form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+  margin-top: 6px;
+}
+.lock__field {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  text-align: left;
+  font-family: var(--mono);
+  font-size: 0.64rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lock__field input {
+  width: 100%;
+  padding: 12px 14px;
+  font-family: var(--font);
+  font-size: 0.95rem;
+  letter-spacing: normal;
+  text-transform: none;
+  color: var(--text);
+  background: rgba(0, 0, 0, 0.35);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+.lock__field input:focus {
+  border-color: rgba(53, 240, 224, 0.5);
+  box-shadow: 0 0 0 3px rgba(53, 240, 224, 0.1);
+}
+.lock__submit {
+  width: 100%;
+  padding: 12px 16px;
+  font-family: var(--mono);
+  font-size: 0.74rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #041312;
+  cursor: pointer;
+  background: var(--cyan);
+  border: 0;
+  border-radius: 10px;
+  transition: filter 0.2s, transform 0.15s;
+}
+.lock__submit:hover { filter: brightness(1.08); }
+.lock__submit:active { transform: translateY(1px); }
+.lock__submit[disabled] { opacity: 0.55; cursor: progress; }
+.lock__msg {
+  min-height: 1.2em;
+  margin: 0;
+  font-size: 0.78rem;
+  color: var(--pink);
+}
+.lock__msg.is-ok { color: var(--cyan); }
+.lock__msg:empty { visibility: hidden; }
+.lock__hint {
+  max-width: 36ch;
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.5;
+  color: var(--muted);
+}
+.lock__actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+}
+.lock__ghost {
+  padding: 8px 14px;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--muted);
+  cursor: pointer;
+  background: transparent;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  transition: color 0.2s, border-color 0.2s;
+}
+.lock__ghost:hover {
+  color: var(--cyan);
+  border-color: rgba(53, 240, 224, 0.45);
+}
+.lock.is-error { border-color: rgba(255, 62, 165, 0.5); }
+@keyframes lock-shake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+.lock.is-error.is-shaking { animation: lock-shake 0.32s ease; }
+
+/* unlocked strip above the private grid */
+.lock--status {
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  padding: 14px 18px;
+  text-align: left;
+  background: var(--card);
+  gap: 12px;
+}
+.lock--status .lock__actions { margin-top: 0; }
+.lock__badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: var(--mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--cyan);
+}
+.lock__status-note {
+  flex: 1;
+  min-width: 180px;
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+@media (max-width: 620px) {
+  .lock { padding: 26px 18px 24px; }
+  .lock--status { padding: 13px 16px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lock.is-error.is-shaking { animation: none; }
 }
 
 .vault__grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
   gap: 14px;
+}
+.vault__grid[hidden] {
+  display: none;
 }
 
 .file {
@@ -1098,6 +1385,12 @@ main, .nav, .footer { position: relative; z-index: 1; }
   width: 100%;
   height: 100%;
   object-fit: cover;
+}
+.file__thumb video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  background: #05080b;
 }
 .file__body {
   display: flex;
@@ -1136,6 +1429,155 @@ main, .nav, .footer { position: relative; z-index: 1; }
   background: rgba(255, 255, 255, 0.015);
   border: 1px dashed var(--line);
   border-radius: var(--radius);
+}
+
+/* the card body opens the preview, the bar under it downloads the file */
+.file__preview {
+  flex: 1;
+  width: 100%;
+  padding: 0;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  cursor: pointer;
+  background: transparent;
+  border: 0;
+  appearance: none;
+  -webkit-appearance: none;
+}
+.file__preview:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
+}
+.file__download {
+  display: block;
+  padding: 11px 16px;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--cyan);
+  background: rgba(53, 240, 224, 0.06);
+  border-top: 1px solid var(--line);
+  transition: background 0.2s, color 0.2s;
+}
+.file__download:hover {
+  color: #041312;
+  background: var(--cyan);
+}
+.file__download:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: -2px;
+}
+
+/* ===========================
+   Lightbox — preview a vault file
+   =========================== */
+.lightbox {
+  position: fixed;
+  inset: 0;
+  z-index: 120;
+  display: grid;
+  place-items: center;
+  padding: 28px;
+  background: rgba(4, 7, 10, 0.9);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.22s ease, visibility 0.22s;
+}
+.lightbox.is-open {
+  opacity: 1;
+  visibility: visible;
+}
+.lightbox__inner {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  width: min(1100px, 100%);
+  max-height: 100%;
+  overflow: hidden;
+  background: var(--card-solid, #0d1117);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  box-shadow: 0 30px 90px rgba(0, 0, 0, 0.6);
+  transform: translateY(12px) scale(0.985);
+  transition: transform 0.22s ease;
+}
+.lightbox.is-open .lightbox__inner {
+  transform: none;
+}
+.lightbox__img {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 190px);
+  object-fit: contain;
+  background: #05080b;
+}
+.lightbox__img[hidden] { display: none; }
+.lightbox__video {
+  display: block;
+  width: 100%;
+  max-height: calc(100vh - 190px);
+  object-fit: contain;
+  background: #05080b;
+}
+.lightbox__video[hidden] { display: none; }
+.lightbox__bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+  padding: 14px 18px;
+  border-top: 1px solid var(--line);
+}
+.lightbox__title {
+  margin: 0;
+  font-size: 1rem;
+  letter-spacing: -0.01em;
+}
+.lightbox__meta {
+  margin: 2px 0 0;
+  font-family: var(--mono);
+  font-size: 0.66rem;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.lightbox__download {
+  flex: none;
+}
+.lightbox__close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  font-size: 1rem;
+  color: var(--text);
+  cursor: pointer;
+  background: rgba(13, 17, 23, 0.85);
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  transition: border-color 0.2s, color 0.2s;
+}
+.lightbox__close:hover {
+  color: var(--cyan);
+  border-color: rgba(53, 240, 224, 0.5);
+}
+.lightbox__close:focus-visible {
+  outline: 2px solid var(--cyan);
+  outline-offset: 3px;
+}
+
+@media (max-width: 620px) {
+  .lightbox { padding: 12px; }
+  .lightbox__img, .lightbox__video { max-height: calc(100vh - 170px); }
+  .lightbox__bar { flex-direction: column; align-items: stretch; gap: 12px; }
+  .lightbox__download { text-align: center; }
+  .lightbox__close { top: 10px; right: 10px; }
 }
 
 /* ===========================
@@ -1269,7 +1711,6 @@ main, .nav, .footer { position: relative; z-index: 1; }
     opacity: 0;
   }
 }
-
 </style>
 </head>
 <body>
@@ -1305,6 +1746,12 @@ main, .nav, .footer { position: relative; z-index: 1; }
   <main>
     <!-- HERO -->
     <section class="hero">
+      <p class="diwali">
+        <span class="diwali__lamp" aria-hidden="true">🪔</span>
+        <span>Happy Diwali</span>
+        <span class="diwali__from">from Veer</span>
+      </p>
+
       <p class="hero__eyebrow"><span class="dot"></span> student · gamer · anime watcher · builder</p>
       <h1 class="hero__title">
         Hey, I'm <span class="grad glitch" data-text="VISI0N ZX">VISI0N ZX</span>
@@ -1356,8 +1803,9 @@ main, .nav, .footer { position: relative; z-index: 1; }
         <div class="about__body">
           <p>
             I'm <strong>Veer Pratap</strong>, a 16-year-old student in the 10th
-            grade. I like figuring things out — taking something apart, seeing
-            how it works, then trying to build my own version of it.
+            grade at <strong>Ocean Pearl International School</strong>. I like
+            figuring things out — taking something apart, seeing how it works,
+            then trying to build my own version of it.
           </p>
           <p>
             Right now that mostly means the web. This site is one of those
@@ -1454,13 +1902,14 @@ main, .nav, .footer { position: relative; z-index: 1; }
         <article class="fave">
           <div class="fave__icon" aria-hidden="true">🍥</div>
           <div>
-            <h3 class="fave__title">Naruto</h3>
+            <h3 class="fave__title">Anime</h3>
             <p class="fave__text">
-              My favourite, no argument. Ninjas, hand signs, and an opening I
-              have never once skipped. Say you haven't watched it and I will
-              explain the whole plot whether you asked or not.
+              If I'm not in a game, I'm watching anime. My favourite is
+              Naruto — ninjas, hand signs, and an opening I have never once
+              skipped. Say you haven't watched it and I will explain the whole
+              plot whether you asked or not.
             </p>
-            <span class="fave__tag">Favourite anime</span>
+            <span class="fave__tag">Favourite: Naruto</span>
           </div>
         </article>
       </div>
@@ -1561,20 +2010,58 @@ main, .nav, .footer { position: relative; z-index: 1; }
       <div class="section__head">
         <span class="section__index">05</span>
         <h2>The Vault</h2>
-        <p class="section__sub">Wallpapers, PFPs and game files. Take what you want.</p>
+        <p class="section__sub">Wallpapers, live wallpapers, PFPs and mods — plus a private, password-locked vault.</p>
       </div>
 
       <div class="vault">
         <div class="vault__bar">
-          <div class="vault__filters" role="group" aria-label="Filter files">
-            <button class="vault__filter is-active" type="button" data-filter="all">All</button>
-            <button class="vault__filter" type="button" data-filter="wallpaper">Wallpapers</button>
-            <button class="vault__filter" type="button" data-filter="pfp">PFPs</button>
-            <button class="vault__filter" type="button" data-filter="game">Game files</button>
+          <div class="vault__tabs" role="group" aria-label="Choose a vault category">
+            <button class="vault__tab" type="button" data-filter="wallpaper" aria-pressed="false">
+              <span class="vault__tab-icon" aria-hidden="true">🖼️</span>
+              <span class="vault__tab-text">
+                <span class="vault__tab-label">Wallpapers</span>
+                <span class="vault__tab-meta">Desktop &amp; phone backgrounds</span>
+              </span>
+              <span class="vault__tab-count" data-count-for="wallpaper"></span>
+            </button>
+            <button class="vault__tab" type="button" data-filter="live" aria-pressed="false">
+              <span class="vault__tab-icon" aria-hidden="true">🎞️</span>
+              <span class="vault__tab-text">
+                <span class="vault__tab-label">Live wallpapers</span>
+                <span class="vault__tab-meta">Animated &amp; video backgrounds</span>
+              </span>
+              <span class="vault__tab-count" data-count-for="live"></span>
+            </button>
+            <button class="vault__tab" type="button" data-filter="pfp" aria-pressed="false">
+              <span class="vault__tab-icon" aria-hidden="true">🙂</span>
+              <span class="vault__tab-text">
+                <span class="vault__tab-label">PFPs</span>
+                <span class="vault__tab-meta">Profile pictures</span>
+              </span>
+              <span class="vault__tab-count" data-count-for="pfp"></span>
+            </button>
+            <button class="vault__tab" type="button" data-filter="mod" aria-pressed="false">
+              <span class="vault__tab-icon" aria-hidden="true">⛏️</span>
+              <span class="vault__tab-text">
+                <span class="vault__tab-label">Minecraft mods</span>
+                <span class="vault__tab-meta">Mods &amp; add-ons</span>
+              </span>
+              <span class="vault__tab-count" data-count-for="mod"></span>
+            </button>
+            <button class="vault__tab vault__tab--private" type="button" data-filter="private" aria-pressed="false">
+              <span class="vault__tab-icon" aria-hidden="true">🔒</span>
+              <span class="vault__tab-text">
+                <span class="vault__tab-label">Private</span>
+                <span class="vault__tab-meta">Password locked</span>
+              </span>
+              <span class="vault__tab-count" data-count-for="private"></span>
+            </button>
           </div>
           <span class="vault__count" id="vaultCount"></span>
+          <button class="vault__hide" type="button" id="vaultHide" hidden>Hide files ✕</button>
         </div>
-        <div class="vault__grid" id="vaultGrid"></div>
+        <div class="vault__lock" id="vaultLock" hidden></div>
+        <div class="vault__grid" id="vaultGrid" hidden></div>
       </div>
     </section>
 
@@ -1671,12 +2158,474 @@ const NOW = {
    thumb: optional preview image — use the same path for pictures
    ========================================================= */
 const FILES = [
+  {
+    title: "Sasuke",
+    type: "wallpaper",
+    meta: "1920×1080 · JPG",
+    href: "files/wallpapers/sasuke.jpg",
+    thumb: "files/wallpapers/thumbs/sasuke.jpg",
+  },
+  {
+    title: "Naruto vs Sasuke",
+    type: "wallpaper",
+    meta: "1920×1080 · JPG",
+    href: "files/wallpapers/naruto-vs-sasuke.jpg",
+    thumb: "files/wallpapers/thumbs/naruto-vs-sasuke.jpg",
+  },
+  {
+    title: "Anime girl",
+    type: "wallpaper",
+    meta: "2560×1440 · JPG",
+    href: "files/wallpapers/anime-girl.jpg",
+    thumb: "files/wallpapers/thumbs/anime-girl.jpg",
+  },
+  {
+    title: "Makima",
+    type: "wallpaper",
+    meta: "700×394 · JPG",
+    href: "files/wallpapers/makima.jpg",
+    thumb: "files/wallpapers/thumbs/makima.jpg",
+  },
+  {
+    title: "Makima — alt",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/makima-alt.jpg",
+    thumb: "files/wallpapers/thumbs/makima-alt.jpg",
+  },
+  {
+    title: "Anime art",
+    type: "wallpaper",
+    meta: "1920×1200 · JPG",
+    href: "files/wallpapers/anime-art.jpg",
+    thumb: "files/wallpapers/thumbs/anime-art.jpg",
+  },
+  {
+    title: "Anime 4K — 01",
+    type: "wallpaper",
+    meta: "3840×2160 · JPG",
+    href: "files/wallpapers/anime-01.jpg",
+    thumb: "files/wallpapers/thumbs/anime-01.jpg",
+  },
+  {
+    title: "Anime ultrawide — 02",
+    type: "wallpaper",
+    meta: "3412×1920 · JPG",
+    href: "files/wallpapers/anime-02.jpg",
+    thumb: "files/wallpapers/thumbs/anime-02.jpg",
+  },
+  {
+    title: "Anime — 03",
+    type: "wallpaper",
+    meta: "2752×1536 · JPG",
+    href: "files/wallpapers/anime-03.jpg",
+    thumb: "files/wallpapers/thumbs/anime-03.jpg",
+  },
+  {
+    title: "Anime girl 4K",
+    type: "wallpaper",
+    meta: "3840×2160 · PNG",
+    href: "files/wallpapers/anime-girl-4k.png",
+    thumb: "files/wallpapers/thumbs/anime-girl-4k.jpg",
+  },
+  {
+    title: "Sasuke 4K",
+    type: "wallpaper",
+    meta: "2880×1800 · PNG",
+    href: "files/wallpapers/sasuke-4k.png",
+    thumb: "files/wallpapers/thumbs/sasuke-4k.jpg",
+  },
+  {
+    title: "Sasuke 4K — alt",
+    type: "wallpaper",
+    meta: "2880×1800 · PNG",
+    href: "files/wallpapers/sasuke-4k-alt.png",
+    thumb: "files/wallpapers/thumbs/sasuke-4k-alt.jpg",
+  },
+  {
+    title: "Ruined city",
+    type: "wallpaper",
+    meta: "4086×2134 · JPG",
+    href: "files/wallpapers/ruined-city.jpg",
+    thumb: "files/wallpapers/thumbs/ruined-city.jpg",
+  },
+  {
+    title: "Photo 01",
+    type: "wallpaper",
+    meta: "1798×1028 · JPG",
+    href: "files/wallpapers/photo-01.jpg",
+    thumb: "files/wallpapers/thumbs/photo-01.jpg",
+  },
+  {
+    title: "Igris",
+    type: "wallpaper",
+    meta: "2880×1800 · PNG",
+    href: "files/wallpapers/igris.png",
+    thumb: "files/wallpapers/thumbs/igris.jpg",
+  },
+  {
+    title: "TikTok",
+    type: "pfp",
+    meta: "720×720 · JPG",
+    href: "files/pfps/tiktok.jpg",
+    thumb: "files/pfps/thumbs/tiktok.jpg",
+  },
+  {
+    title: "PFP 01",
+    type: "pfp",
+    meta: "720×720 · JPG",
+    href: "files/pfps/pfp-01.jpg",
+    thumb: "files/pfps/thumbs/pfp-01.jpg",
+  },
+  {
+    title: "PFP 02",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/pfp-02.jpg",
+    thumb: "files/pfps/thumbs/pfp-02.jpg",
+  },
+  {
+    title: "PFP 03",
+    type: "pfp",
+    meta: "640×571 · JPG",
+    href: "files/pfps/pfp-03.jpg",
+    thumb: "files/pfps/thumbs/pfp-03.jpg",
+  },
+  {
+    title: "Jujutsu Kaisen",
+    type: "pfp",
+    meta: "377×400 · JPG",
+    href: "files/pfps/jujutsu-kaisen.jpg",
+    thumb: "files/pfps/thumbs/jujutsu-kaisen.jpg",
+  },
+  {
+    title: "Yuta Okkotsu",
+    type: "pfp",
+    meta: "736×730 · JPG",
+    href: "files/pfps/yuta-okkotsu.jpg",
+    thumb: "files/pfps/thumbs/yuta-okkotsu.jpg",
+  },
+  {
+    title: "Funny photo",
+    type: "pfp",
+    meta: "512×536 · JPG",
+    href: "files/pfps/funny-photo.jpg",
+    thumb: "files/pfps/thumbs/funny-photo.jpg",
+  },
+  {
+    title: "PFP 04",
+    type: "pfp",
+    meta: "735×742 · JPG",
+    href: "files/pfps/pfp-04.jpg",
+    thumb: "files/pfps/thumbs/pfp-04.jpg",
+  },
+  {
+    title: "PFP 05",
+    type: "pfp",
+    meta: "736×735 · JPG",
+    href: "files/pfps/pfp-05.jpg",
+    thumb: "files/pfps/thumbs/pfp-05.jpg",
+  },
+  {
+    title: "Chico",
+    type: "pfp",
+    meta: "735×736 · JPG",
+    href: "files/pfps/chico.jpg",
+    thumb: "files/pfps/thumbs/chico.jpg",
+  },
+  {
+    title: "Chico Lachowski",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/chico-lachowski.jpg",
+    thumb: "files/pfps/thumbs/chico-lachowski.jpg",
+  },
+  {
+    title: "Louis Partridge",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/louis-partridge.jpg",
+    thumb: "files/pfps/thumbs/louis-partridge.jpg",
+  },
+  {
+    title: "PFP 06",
+    type: "pfp",
+    meta: "735×747 · JPG",
+    href: "files/pfps/pfp-06.jpg",
+    thumb: "files/pfps/thumbs/pfp-06.jpg",
+  },
+  {
+    title: "PFP 07",
+    type: "pfp",
+    meta: "564×564 · JPG",
+    href: "files/pfps/pfp-07.jpg",
+    thumb: "files/pfps/thumbs/pfp-07.jpg",
+  },
+  {
+    title: "PFP 08",
+    type: "pfp",
+    meta: "735×738 · JPG",
+    href: "files/pfps/pfp-08.jpg",
+    thumb: "files/pfps/thumbs/pfp-08.jpg",
+  },
+  {
+    title: "Plan B",
+    type: "pfp",
+    meta: "735×919 · JPG",
+    href: "files/pfps/plan-b.jpg",
+    thumb: "files/pfps/thumbs/plan-b.jpg",
+  },
+  {
+    title: "Boy anime",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/boy-anime.jpg",
+    thumb: "files/pfps/thumbs/boy-anime.jpg",
+  },
+  {
+    title: "Cool cat",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/cool-cat.jpg",
+    thumb: "files/pfps/thumbs/cool-cat.jpg",
+  },
+  {
+    title: "Moon",
+    type: "pfp",
+    meta: "735×738 · JPG",
+    href: "files/pfps/moon.jpg",
+    thumb: "files/pfps/thumbs/moon.jpg",
+  },
+  {
+    title: "PFP 09",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/pfp-09.jpg",
+    thumb: "files/pfps/thumbs/pfp-09.jpg",
+  },
+  {
+    title: "PFP 10",
+    type: "pfp",
+    meta: "628×628 · JPG",
+    href: "files/pfps/pfp-10.jpg",
+    thumb: "files/pfps/thumbs/pfp-10.jpg",
+  },
+  {
+    title: "PFP 11",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/pfp-11.jpg",
+    thumb: "files/pfps/thumbs/pfp-11.jpg",
+  },
+  {
+    title: "Demon editor",
+    type: "pfp",
+    meta: "720×955 · JPG",
+    href: "files/pfps/demon-editor.jpg",
+    thumb: "files/pfps/thumbs/demon-editor.jpg",
+  },
+  {
+    title: "PFP 12",
+    type: "pfp",
+    meta: "735×732 · JPG",
+    href: "files/pfps/pfp-12.jpg",
+    thumb: "files/pfps/thumbs/pfp-12.jpg",
+  },
+  {
+    title: "PFP 13",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/pfp-13.jpg",
+    thumb: "files/pfps/thumbs/pfp-13.jpg",
+  },
+  {
+    title: "Lorenzo Zurzolo",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/lorenzo-zurzolo.jpg",
+    thumb: "files/pfps/thumbs/lorenzo-zurzolo.jpg",
+  },
+  {
+    title: "PFP 14",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/pfp-14.jpg",
+    thumb: "files/pfps/thumbs/pfp-14.jpg",
+  },
+  {
+    title: "Rosé",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/rose.jpg",
+    thumb: "files/pfps/thumbs/rose.jpg",
+  },
+  {
+    title: "Ronn",
+    type: "pfp",
+    meta: "699×699 · JPG",
+    href: "files/pfps/ronn.jpg",
+    thumb: "files/pfps/thumbs/ronn.jpg",
+  },
+  {
+    title: "Wallpaper 16",
+    type: "wallpaper",
+    meta: "735×490 · JPG",
+    href: "files/wallpapers/wallpaper-16.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-16.jpg",
+  },
+  {
+    title: "Gojo Satoru",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/gojo-satoru.jpg",
+    thumb: "files/pfps/thumbs/gojo-satoru.jpg",
+  },
+  {
+    title: "NYM",
+    type: "pfp",
+    meta: "736×736 · JPG",
+    href: "files/pfps/nym.jpg",
+    thumb: "files/pfps/thumbs/nym.jpg",
+  },
+  {
+    title: "Lone Ronin",
+    type: "live",
+    meta: "1920×1080 · MP4 · 11.4 MB",
+    href: "files/live/lone-ronin.mp4",
+    thumb: "",
+  },
+  {
+    title: "Black BMW",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/black-bmw.jpg",
+    thumb: "files/wallpapers/thumbs/black-bmw.jpg",
+  },
+  {
+    title: "Toyota Supra Neon",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/toyota-supra-neon.jpg",
+    thumb: "files/wallpapers/thumbs/toyota-supra-neon.jpg",
+  },
+  {
+    title: "Neon Purple Supra",
+    type: "wallpaper",
+    meta: "735×414 · JPG",
+    href: "files/wallpapers/neon-purple-supra.jpg",
+    thumb: "files/wallpapers/thumbs/neon-purple-supra.jpg",
+  },
+  {
+    title: "Wallpaper 17",
+    type: "wallpaper",
+    meta: "719×1280 · JPG",
+    href: "files/wallpapers/wallpaper-17.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-17.jpg",
+  },
+  {
+    title: "Wallpaper 18",
+    type: "wallpaper",
+    meta: "736×1347 · JPG",
+    href: "files/wallpapers/wallpaper-18.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-18.jpg",
+  },
+  {
+    title: "Wallpaper 19",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/wallpaper-19.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-19.jpg",
+  },
+  {
+    title: "Radha Krishna",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/radha-krishna.jpg",
+    thumb: "files/wallpapers/thumbs/radha-krishna.jpg",
+  },
+  {
+    title: "Wallpaper 20",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/wallpaper-20.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-20.jpg",
+  },
+  {
+    title: "Gray Spider-Man",
+    type: "wallpaper",
+    meta: "736×460 · JPG",
+    href: "files/wallpapers/gray-spiderman.jpg",
+    thumb: "files/wallpapers/thumbs/gray-spiderman.jpg",
+  },
+  {
+    title: "Anime 1920×1080",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/anime-1920x1080.jpg",
+    thumb: "files/wallpapers/thumbs/anime-1920x1080.jpg",
+  },
+  {
+    title: "Wallpaper 21",
+    type: "wallpaper",
+    meta: "686×386 · JPG",
+    href: "files/wallpapers/wallpaper-21.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-21.jpg",
+  },
+  {
+    title: "Desktop Anime",
+    type: "wallpaper",
+    meta: "736×414 · JPG",
+    href: "files/wallpapers/desktop-anime.jpg",
+    thumb: "files/wallpapers/thumbs/desktop-anime.jpg",
+  },
+  {
+    title: "Wallpaper 22",
+    type: "wallpaper",
+    meta: "736×415 · JPG",
+    href: "files/wallpapers/wallpaper-22.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-22.jpg",
+  },
+  {
+    title: "Wallpaper 23",
+    type: "wallpaper",
+    meta: "736×737 · JPG",
+    href: "files/wallpapers/wallpaper-23.jpg",
+    thumb: "files/wallpapers/thumbs/wallpaper-23.jpg",
+  },
+  {
+    title: "Raizel",
+    type: "wallpaper",
+    meta: "720×720 · JPG",
+    href: "files/wallpapers/raizel.jpg",
+    thumb: "files/wallpapers/thumbs/raizel.jpg",
+  },
+  {
+    title: "Yuri Kanato",
+    type: "wallpaper",
+    meta: "365×365 · JPG",
+    href: "files/wallpapers/yuri-kanato.jpg",
+    thumb: "files/wallpapers/thumbs/yuri-kanato.jpg",
+  },
+];
+
+/* =========================================================
+   PRIVATE VAULT
+   Files listed here stay hidden behind the password.
+   They are completely separate from FILES, so nothing in the
+   public vault changes.
+
+   To add one:
+   1. drop the file in files/private/ (thumbnail in files/private/thumbs/)
+   2. copy the example below and change the values
+   type can be "wallpaper", "live", "pfp" or "mod".
+   ========================================================= */
+const PRIVATE_FILES = [
   // {
-  //   title: "Neon city",
+  //   title: "Example",
   //   type: "wallpaper",
   //   meta: "1920×1080 · JPG",
-  //   href: "files/wallpapers/neon-city.jpg",
-  //   thumb: "files/wallpapers/neon-city.jpg",
+  //   href: "files/private/example.jpg",
+  //   thumb: "files/private/thumbs/example.jpg",
   // },
 ];
 
@@ -1711,68 +2660,643 @@ function renderNow() {
 
 const FILE_LABELS = {
   wallpaper: "Wallpaper",
+  live: "Live wallpaper",
   pfp: "PFP",
+  mod: "Minecraft mod",
   game: "Game file",
 };
 
 const FILE_ICONS = {
   wallpaper: "🖼️",
+  live: "🎞️",
   pfp: "🙂",
+  mod: "⛏️",
   game: "🎮",
 };
 
-function renderVault(filter = "all") {
-  const grid = document.getElementById("vaultGrid");
-  const bar = document.querySelector(".vault__bar");
-  const count = document.getElementById("vaultCount");
-  if (!grid) return;
+const VAULT_EMPTY = {
+  mod: "No Minecraft mods in here yet — check back soon.",
+  live: "No live wallpapers in here yet — check back soon.",
+  private: "Nothing in the private vault yet.",
+};
 
-  // nothing in the vault yet: keep the section quiet instead of showing
-  // a row of empty filters
-  if (!FILES.length && bar) bar.hidden = true;
+/* =========================================================
+   Private vault lock
+   ========================================================= */
 
-  const items = FILES.filter((f) => filter === "all" || f.type === filter);
-  if (count) count.textContent = `${items.length} file${items.length === 1 ? "" : "s"}`;
+const PRIVATE_STORE_KEY = "vision.private.v1";
+const PRIVATE_ROUNDS = 25000;
+const PRIVATE_MIN_LENGTH = 4;
 
-  if (!items.length) {
-    grid.innerHTML =
-      '<p class="vault__empty">The vault is being stocked — wallpapers, PFPs and game files land here soon.</p>';
-    return;
+/* the password is "20101216" — only this salted hash is stored here,
+   never the password itself. Change it from inside the unlocked vault. */
+const PRIVATE_DEFAULT_CREDENTIAL = {
+  salt: "3f3339f525e5a97c4fff751ff32e9465",
+  hash: "57e556fda5797121e402220a3d1c0bab9d42403164344e2fbcad3b59cd5c15d5",
+  rounds: 25000,
+};
+
+let privateUnlocked = false;
+let privateMemoryCredential = null;
+
+function bytesToHex(bytes) {
+  let out = "";
+  for (let i = 0; i < bytes.length; i++) {
+    out += bytes[i].toString(16).padStart(2, "0");
+  }
+  return out;
+}
+
+/* small dependency-free SHA-256 so the lock also works from file:// */
+const SHA256_K = [
+  0x428a2f98, 0x71374491, 0xb5c0fbcf, 0xe9b5dba5, 0x3956c25b, 0x59f111f1, 0x923f82a4, 0xab1c5ed5,
+  0xd807aa98, 0x12835b01, 0x243185be, 0x550c7dc3, 0x72be5d74, 0x80deb1fe, 0x9bdc06a7, 0xc19bf174,
+  0xe49b69c1, 0xefbe4786, 0x0fc19dc6, 0x240ca1cc, 0x2de92c6f, 0x4a7484aa, 0x5cb0a9dc, 0x76f988da,
+  0x983e5152, 0xa831c66d, 0xb00327c8, 0xbf597fc7, 0xc6e00bf3, 0xd5a79147, 0x06ca6351, 0x14292967,
+  0x27b70a85, 0x2e1b2138, 0x4d2c6dfc, 0x53380d13, 0x650a7354, 0x766a0abb, 0x81c2c92e, 0x92722c85,
+  0xa2bfe8a1, 0xa81a664b, 0xc24b8b70, 0xc76c51a3, 0xd192e819, 0xd6990624, 0xf40e3585, 0x106aa070,
+  0x19a4c116, 0x1e376c08, 0x2748774c, 0x34b0bcb5, 0x391c0cb3, 0x4ed8aa4a, 0x5b9cca4f, 0x682e6ff3,
+  0x748f82ee, 0x78a5636f, 0x84c87814, 0x8cc70208, 0x90befffa, 0xa4506ceb, 0xbef9a3f7, 0xc67178f2,
+];
+
+function sha256Bytes(bytes) {
+  const H = new Uint32Array([
+    0x6a09e667, 0xbb67ae85, 0x3c6ef372, 0xa54ff53a,
+    0x510e527f, 0x9b05688c, 0x1f83d9ab, 0x5be0cd19,
+  ]);
+
+  const padded = new Uint8Array((((bytes.length + 9) + 63) >> 6) << 6);
+  padded.set(bytes);
+  padded[bytes.length] = 0x80;
+
+  const view = new DataView(padded.buffer);
+  const bits = bytes.length * 8;
+  view.setUint32(padded.length - 8, Math.floor(bits / 0x100000000));
+  view.setUint32(padded.length - 4, bits >>> 0);
+
+  const w = new Uint32Array(64);
+  const rotr = (value, shift) => (value >>> shift) | (value << (32 - shift));
+
+  for (let offset = 0; offset < padded.length; offset += 64) {
+    for (let i = 0; i < 16; i++) w[i] = view.getUint32(offset + i * 4);
+    for (let i = 16; i < 64; i++) {
+      const s0 = rotr(w[i - 15], 7) ^ rotr(w[i - 15], 18) ^ (w[i - 15] >>> 3);
+      const s1 = rotr(w[i - 2], 17) ^ rotr(w[i - 2], 19) ^ (w[i - 2] >>> 10);
+      w[i] = (w[i - 16] + s0 + w[i - 7] + s1) >>> 0;
+    }
+
+    let a = H[0];
+    let b = H[1];
+    let c = H[2];
+    let d = H[3];
+    let e = H[4];
+    let f = H[5];
+    let g = H[6];
+    let h = H[7];
+
+    for (let i = 0; i < 64; i++) {
+      const S1 = rotr(e, 6) ^ rotr(e, 11) ^ rotr(e, 25);
+      const ch = (e & f) ^ (~e & g);
+      const t1 = (h + S1 + ch + SHA256_K[i] + w[i]) >>> 0;
+      const S0 = rotr(a, 2) ^ rotr(a, 13) ^ rotr(a, 22);
+      const maj = (a & b) ^ (a & c) ^ (b & c);
+      const t2 = (S0 + maj) >>> 0;
+
+      h = g;
+      g = f;
+      f = e;
+      e = (d + t1) >>> 0;
+      d = c;
+      c = b;
+      b = a;
+      a = (t1 + t2) >>> 0;
+    }
+
+    H[0] = (H[0] + a) >>> 0;
+    H[1] = (H[1] + b) >>> 0;
+    H[2] = (H[2] + c) >>> 0;
+    H[3] = (H[3] + d) >>> 0;
+    H[4] = (H[4] + e) >>> 0;
+    H[5] = (H[5] + f) >>> 0;
+    H[6] = (H[6] + g) >>> 0;
+    H[7] = (H[7] + h) >>> 0;
   }
 
-  grid.innerHTML = items
+  const out = new Uint8Array(32);
+  const outView = new DataView(out.buffer);
+  for (let i = 0; i < 8; i++) outView.setUint32(i * 4, H[i]);
+  return out;
+}
+
+function randomHex(length) {
+  const bytes = new Uint8Array(length);
+  if (window.crypto && window.crypto.getRandomValues) {
+    window.crypto.getRandomValues(bytes);
+  } else {
+    for (let i = 0; i < length; i++) bytes[i] = Math.floor(Math.random() * 256);
+  }
+  return bytesToHex(bytes);
+}
+
+/* hash the password many times so guessing is slow */
+function stretchPassword(password, salt, rounds) {
+  let digest = sha256Bytes(new TextEncoder().encode(`${salt}:${password}`));
+  for (let i = 1; i < rounds; i++) digest = sha256Bytes(digest);
+  return bytesToHex(digest);
+}
+
+function loadCredential() {
+  if (privateMemoryCredential) return privateMemoryCredential;
+
+  let raw = null;
+  try {
+    raw = window.localStorage.getItem(PRIVATE_STORE_KEY);
+  } catch (error) {
+    return PRIVATE_DEFAULT_CREDENTIAL;
+  }
+  if (!raw) return PRIVATE_DEFAULT_CREDENTIAL;
+
+  try {
+    const data = JSON.parse(raw);
+    const rounds = Number(data && data.rounds);
+    if (!data || !data.salt || !data.hash) return PRIVATE_DEFAULT_CREDENTIAL;
+    if (!Number.isFinite(rounds) || rounds < 1000 || rounds > 200000) {
+      return PRIVATE_DEFAULT_CREDENTIAL;
+    }
+    return { salt: String(data.salt), hash: String(data.hash), rounds };
+  } catch (error) {
+    return PRIVATE_DEFAULT_CREDENTIAL;
+  }
+}
+
+function saveCredential(credential) {
+  privateMemoryCredential = credential;
+  try {
+    window.localStorage.setItem(PRIVATE_STORE_KEY, JSON.stringify(credential));
+  } catch (error) {
+    /* storage blocked (private mode): the password still works this session */
+  }
+}
+
+function credentialMatches(credential, password) {
+  if (!credential || !password) return false;
+  return credential.hash === stretchPassword(password, credential.salt, credential.rounds);
+}
+
+function lockPanelHTML() {
+  return `
+    <form class="lock" id="lockUnlock" novalidate>
+      <span class="lock__icon" aria-hidden="true">🔒</span>
+      <h3 class="lock__title">Private vault</h3>
+      <p class="lock__text">Enter the password to open these files.</p>
+      <div class="lock__form">
+        <label class="lock__field">Password
+          <input type="password" name="password" autocomplete="current-password" required>
+        </label>
+        <button class="lock__submit" type="submit">Unlock</button>
+      </div>
+      <p class="lock__msg" role="alert" aria-live="polite"></p>
+    </form>`;
+}
+
+function lockStatusHTML() {
+  return `
+    <div class="lock lock--status">
+      <span class="lock__badge">🔓 Unlocked</span>
+      <span class="lock__status-note">Stays open until you reload or lock it.</span>
+      <div class="lock__actions">
+        <button class="lock__ghost" type="button" data-action="change">Change password</button>
+        <button class="lock__ghost" type="button" data-action="lock">Lock now</button>
+      </div>
+    </div>`;
+}
+
+function changePasswordHTML() {
+  return `
+    <form class="lock" id="lockChange" novalidate>
+      <span class="lock__icon" aria-hidden="true">🔑</span>
+      <h3 class="lock__title">Change password</h3>
+      <div class="lock__form">
+        <label class="lock__field">Current password
+          <input type="password" name="current" autocomplete="current-password" required>
+        </label>
+        <label class="lock__field">New password
+          <input type="password" name="password" autocomplete="new-password" minlength="${PRIVATE_MIN_LENGTH}" required>
+        </label>
+        <label class="lock__field">Confirm new password
+          <input type="password" name="confirm" autocomplete="new-password" minlength="${PRIVATE_MIN_LENGTH}" required>
+        </label>
+        <button class="lock__submit" type="submit">Update password</button>
+      </div>
+      <p class="lock__msg" role="alert" aria-live="polite"></p>
+      <div class="lock__actions">
+        <button class="lock__ghost" type="button" data-action="cancel">Cancel</button>
+      </div>
+    </form>`;
+}
+
+function setLockMessage(form, text, ok) {
+  const message = form.querySelector(".lock__msg");
+  if (message) {
+    message.textContent = text;
+    message.classList.toggle("is-ok", Boolean(ok));
+  }
+  if (!ok) {
+    form.classList.add("is-error", "is-shaking");
+    setTimeout(() => form.classList.remove("is-shaking"), 340);
+  }
+}
+
+function setupPrivateLock() {
+  const host = document.getElementById("vaultLock");
+  if (!host) return;
+
+  host.addEventListener("submit", (event) => {
+    const form = event.target.closest("form");
+    if (!form) return;
+    event.preventDefault();
+
+    if (form.id === "lockUnlock") {
+      const credential = loadCredential();
+      const password = form.elements.password.value;
+      if (credential && credentialMatches(credential, password)) {
+        privateUnlocked = true;
+        renderVault("private");
+      } else {
+        setLockMessage(form, "Wrong password. Try again.");
+        form.elements.password.select();
+      }
+      return;
+    }
+
+    if (form.id !== "lockChange") return;
+
+    const password = form.elements.password.value;
+    const confirm = form.elements.confirm.value;
+    const submit = form.querySelector(".lock__submit");
+    if (submit && submit.disabled) return;
+
+    const credential = loadCredential();
+    if (!credentialMatches(credential, form.elements.current.value)) {
+      setLockMessage(form, "Current password is wrong.");
+      return;
+    }
+
+    if (password.length < PRIVATE_MIN_LENGTH) {
+      setLockMessage(form, `Use at least ${PRIVATE_MIN_LENGTH} characters.`);
+      return;
+    }
+
+    if (password !== confirm) {
+      setLockMessage(form, "The two passwords don't match.");
+      return;
+    }
+
+    if (submit) {
+      submit.disabled = true;
+      submit.textContent = "Saving…";
+    }
+
+    // let the button repaint before the hashing runs
+    setTimeout(() => {
+      const salt = randomHex(16);
+      saveCredential({
+        salt,
+        hash: stretchPassword(password, salt, PRIVATE_ROUNDS),
+        rounds: PRIVATE_ROUNDS,
+      });
+      privateUnlocked = true;
+      renderVault("private");
+    }, 20);
+  });
+
+  host.addEventListener("input", (event) => {
+    const form = event.target.closest("form");
+    if (!form) return;
+    form.classList.remove("is-error", "is-shaking");
+    const message = form.querySelector(".lock__msg");
+    if (message && !message.classList.contains("is-ok")) message.textContent = "";
+  });
+
+  host.addEventListener("click", (event) => {
+    const button = event.target.closest("[data-action]");
+    if (!button) return;
+
+    if (button.dataset.action === "lock") {
+      privateUnlocked = false;
+      renderVault("private");
+      return;
+    }
+
+    if (button.dataset.action === "change") {
+      host.innerHTML = changePasswordHTML();
+      const input = host.querySelector("input");
+      if (input) input.focus({ preventScroll: true });
+      return;
+    }
+
+    if (button.dataset.action === "cancel") {
+      host.innerHTML = lockStatusHTML();
+    }
+  });
+}
+
+/* build the card markup for a list of files */
+function fileCardsHTML(items) {
+  return items
     .map((item) => {
+      const isLive = item.type === "live";
       const thumb = item.thumb
         ? `<img src="${escapeHTML(item.thumb)}" alt="" loading="lazy" decoding="async">`
-        : `<span aria-hidden="true">${FILE_ICONS[item.type] || "📦"}</span>`;
+        : isLive
+          ? `<video src="${escapeHTML(item.href)}" muted loop playsinline preload="metadata" aria-hidden="true"></video>`
+          : `<span aria-hidden="true">${FILE_ICONS[item.type] || "📦"}</span>`;
 
       const meta = [FILE_LABELS[item.type] || "File", item.meta]
         .filter(Boolean)
         .map(escapeHTML)
         .join(" · ");
 
+      const data =
+        `data-href="${escapeHTML(item.href)}" ` +
+        `data-src="${escapeHTML(item.href)}" ` +
+        `data-title="${escapeHTML(item.title)}" ` +
+        `data-file="${escapeHTML(item.href.split("/").pop())}" ` +
+        `data-meta="${meta}"`;
+
       return `
-        <a class="file" href="${escapeHTML(item.href)}" download rel="noopener">
-          <div class="file__thumb">${thumb}</div>
-          <div class="file__body">
-            <h3 class="file__title">${escapeHTML(item.title)}</h3>
-            <p class="file__meta">${meta}</p>
-            <span class="file__get">Download ↓</span>
-          </div>
-        </a>`;
+        <div class="file">
+          <button class="file__preview" type="button" ${data}>
+            <div class="file__thumb">${thumb}</div>
+            <div class="file__body">
+              <h3 class="file__title">${escapeHTML(item.title)}</h3>
+              <p class="file__meta">${meta}</p>
+              <span class="file__get">Preview</span>
+            </div>
+          </button>
+          <a class="file__download" href="${escapeHTML(item.href)}" download="${escapeHTML(item.href.split("/").pop())}" rel="noopener">Download ↓</a>
+        </div>`;
     })
     .join("");
 }
 
+function renderVault(filter = null) {
+  const grid = document.getElementById("vaultGrid");
+  const lock = document.getElementById("vaultLock");
+  const bar = document.querySelector(".vault__bar");
+  const count = document.getElementById("vaultCount");
+  const hide = document.getElementById("vaultHide");
+  if (!grid) return;
+
+  // nothing in the vault yet: keep the section quiet instead of showing
+  // a row of empty filters
+  if (!FILES.length && bar) bar.hidden = true;
+
+  document.querySelectorAll("[data-count-for]").forEach((el) => {
+    const key = el.dataset.countFor;
+    if (key === "private") {
+      el.textContent = privateUnlocked ? String(PRIVATE_FILES.length) : "Locked";
+      return;
+    }
+    el.textContent = FILES.filter((f) => f.type === key).length;
+  });
+
+  if (lock) {
+    lock.hidden = true;
+    lock.innerHTML = "";
+  }
+
+  // no button picked yet: keep the cards hidden so the section stays short
+  if (!filter) {
+    grid.hidden = true;
+    grid.innerHTML = "";
+    if (count) count.textContent = "";
+    if (hide) hide.hidden = true;
+    return;
+  }
+
+  const isPrivate = filter === "private";
+
+  // locked: show the password form instead of any file cards
+  if (isPrivate && !privateUnlocked) {
+    grid.hidden = true;
+    grid.innerHTML = "";
+    if (lock) {
+      lock.hidden = false;
+      lock.innerHTML = lockPanelHTML();
+      const input = lock.querySelector("input");
+      if (input) input.focus({ preventScroll: true });
+    }
+    if (count) count.textContent = "locked";
+    if (hide) hide.hidden = false;
+    return;
+  }
+
+  if (isPrivate && lock) {
+    lock.hidden = false;
+    lock.innerHTML = lockStatusHTML();
+  }
+
+  const items = isPrivate ? PRIVATE_FILES : FILES.filter((f) => f.type === filter);
+  if (count) count.textContent = `${items.length} file${items.length === 1 ? "" : "s"}`;
+  if (hide) hide.hidden = false;
+  grid.hidden = false;
+
+  if (!items.length) {
+    grid.innerHTML = `<p class="vault__empty">${
+      VAULT_EMPTY[filter] || "The vault is being stocked — check back soon."
+    }</p>`;
+    return;
+  }
+
+  grid.innerHTML = fileCardsHTML(items);
+}
+
 function setupVault() {
-  const filters = [...document.querySelectorAll(".vault__filter")];
-  filters.forEach((button) => {
+  const tabs = [...document.querySelectorAll(".vault__tab")];
+  const hide = document.getElementById("vaultHide");
+
+  const clearTabs = () => {
+    tabs.forEach((b) => {
+      b.classList.remove("is-active");
+      b.setAttribute("aria-pressed", "false");
+    });
+  };
+
+  tabs.forEach((button) => {
     button.addEventListener("click", () => {
-      filters.forEach((b) => b.classList.toggle("is-active", b === button));
-      renderVault(button.dataset.filter);
+      const wasActive = button.classList.contains("is-active");
+      clearTabs();
+      if (!wasActive) {
+        button.classList.add("is-active");
+        button.setAttribute("aria-pressed", "true");
+      }
+      renderVault(wasActive ? null : button.dataset.filter);
     });
   });
+
+  if (hide) {
+    hide.addEventListener("click", () => {
+      clearTabs();
+      renderVault(null);
+    });
+  }
+
+  // live wallpaper cards stay still until you hover them, so a grid full of
+  // videos doesn't eat CPU while nobody is looking
+  const grid = document.getElementById("vaultGrid");
+  if (grid) {
+    grid.addEventListener("pointerover", (event) => {
+      const video = event.target.closest(".file__thumb video");
+      if (video && video.paused) video.play().catch(() => {});
+    });
+    grid.addEventListener("pointerout", (event) => {
+      const video = event.target.closest(".file__thumb video");
+      if (video && !video.paused) {
+        video.pause();
+        video.currentTime = 0;
+      }
+    });
+  }
+
+  setupPrivateLock();
   renderVault();
+}
+
+/* clicking a card opens the picture or video instead of downloading it */
+function setupLightbox() {
+  if (document.getElementById("lightbox")) return;
+
+  const box = document.createElement("div");
+  box.className = "lightbox";
+  box.id = "lightbox";
+  box.setAttribute("role", "dialog");
+  box.setAttribute("aria-modal", "true");
+  box.setAttribute("aria-label", "Preview");
+  box.setAttribute("aria-hidden", "true");
+  box.innerHTML = `
+    <button class="lightbox__close" type="button" aria-label="Close preview">✕</button>
+    <div class="lightbox__inner">
+      <img class="lightbox__img" alt="" />
+      <video class="lightbox__video" controls loop muted playsinline hidden></video>
+      <div class="lightbox__bar">
+        <div>
+          <h3 class="lightbox__title"></h3>
+          <p class="lightbox__meta"></p>
+        </div>
+        <a class="pill pill--accent lightbox__download" href="#" download>Download</a>
+      </div>
+    </div>`;
+  document.body.appendChild(box);
+
+  const img = box.querySelector(".lightbox__img");
+  const video = box.querySelector(".lightbox__video");
+  const title = box.querySelector(".lightbox__title");
+  const meta = box.querySelector(".lightbox__meta");
+  const link = box.querySelector(".lightbox__download");
+  let lastFocus = null;
+
+  const close = () => {
+    box.classList.remove("is-open");
+    box.setAttribute("aria-hidden", "true");
+    document.body.style.overflow = "";
+    img.removeAttribute("src");
+    video.pause();
+    video.removeAttribute("src");
+    if (lastFocus && lastFocus.focus) lastFocus.focus();
+  };
+
+  const open = (card) => {
+    const src = card.dataset.src || "";
+    const isVideo = /\.(mp4|webm|mov|m4v)$/i.test(src);
+    lastFocus = document.activeElement;
+    img.hidden = isVideo;
+    video.hidden = !isVideo;
+    if (isVideo) {
+      img.removeAttribute("src");
+      video.src = src;
+      video.play().catch(() => {});
+    } else {
+      video.pause();
+      video.removeAttribute("src");
+      img.src = src;
+    }
+    img.alt = card.dataset.title || "";
+    title.textContent = card.dataset.title || "";
+    meta.textContent = card.dataset.meta || "";
+    link.href = card.dataset.href || "#";
+    link.setAttribute("download", card.dataset.file || "");
+    box.classList.add("is-open");
+    box.setAttribute("aria-hidden", "false");
+    document.body.style.overflow = "hidden";
+    box.querySelector(".lightbox__close").focus();
+  };
+
+  document.addEventListener("click", (event) => {
+    const card = event.target.closest(".file__preview");
+    if (!card) return;
+    event.preventDefault();
+    open(card);
+  });
+
+  box.addEventListener("click", (event) => {
+    if (event.target === box || event.target.closest(".lightbox__close")) close();
+  });
+
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && box.classList.contains("is-open")) close();
+  });
+}
+
+/* Every Download link goes through fetch so the file is really saved, even in
+   browsers (and in-app webviews) that ignore the download attribute. */
+function setupDownloads() {
+  document.addEventListener("click", (event) => {
+    const link = event.target.closest(".file__download, .lightbox__download");
+    if (!link) return;
+
+    const href = link.getAttribute("href");
+    if (!href || href === "#") return;
+
+    // file:// pages can't be fetched; the native download works there
+    if (location.protocol === "file:") return;
+
+    const name = link.getAttribute("download") || href.split("/").pop();
+    const original = link.textContent;
+
+    event.preventDefault();
+    link.textContent = "Downloading…";
+    link.setAttribute("aria-busy", "true");
+
+    fetch(href, { credentials: "same-origin" })
+      .then((res) => {
+        if (!res.ok) throw new Error("HTTP " + res.status);
+        return res.blob();
+      })
+      .then((blob) => {
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = name;
+        a.style.display = "none";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        setTimeout(() => URL.revokeObjectURL(url), 20000);
+
+        link.textContent = "Saved ✓";
+        setTimeout(() => {
+          link.textContent = original;
+          link.removeAttribute("aria-busy");
+        }, 1600);
+      })
+      .catch(() => {
+        // last resort: open the file so it can still be saved manually
+        link.textContent = original;
+        link.removeAttribute("aria-busy");
+        window.open(href, "_blank", "noopener");
+      });
+  });
 }
 
 function renderWork() {
@@ -1984,11 +3508,12 @@ document.addEventListener("DOMContentLoaded", () => {
   setupActiveLink();
   setupScrollFx();
   setupVault();
+  setupLightbox();
+  setupDownloads();
 
   const year = document.getElementById("year");
   if (year) year.textContent = new Date().getFullYear();
 });
-
 </script>
 </body>
 </html>
